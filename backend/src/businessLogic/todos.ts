@@ -40,7 +40,7 @@ export async function createTodo(createTodoRequest : CreateTodoRequest, event: a
   }
 }
 
-export async function updateTodo(updateTodoRequest : UpdateTodoRequest, todoId : string): Promise<TodoUpdate> {
+export async function updateTodo(updateTodoRequest : UpdateTodoRequest, todoId : string, userId : string): Promise<TodoUpdate> {
   try {
     logger.info('update todo with id', {
       key: todoId,
@@ -51,7 +51,7 @@ export async function updateTodo(updateTodoRequest : UpdateTodoRequest, todoId :
       name: updateTodoRequest.name,
       dueDate: updateTodoRequest.dueDate,
       done: updateTodoRequest.done
-    }, todoId)
+    }, todoId, userId)
   }catch (e) {
     createError(e)
   }
