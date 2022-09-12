@@ -8,6 +8,22 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-plugin-tracing
   - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+
+custom:
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Serverless Todo App
+        description: Serverless application for todo
+    models:
+      - name: TodoItemRequest
+        contentType: application/json
+        schema: ${file(models/create-todo-model.json)}
+      - name: TodoUpdateRequest
+        contentType: application/json
+        schema: ${file(models/update-todo-model.json)}
 
 provider:
   name: aws
@@ -55,13 +71,7 @@ functions:
       - http:
           method: get
           path: todos
-          cors:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
+          cors: true
           authorizer: Auth
     iamRoleStatementsInherit: true
     iamRoleStatements:
@@ -86,18 +96,14 @@ functions:
       - http:
           method: post
           path: todos
-          cors:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
-          request:
-            schemas:
-              application/json: ${file(models/create-todo-model.json)}
+          documentation:
+            summary: Create a new todo
+            description: Create a new todo entry
+            requestModels:
+              'application/json': TodoItemRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -110,7 +116,6 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
 
-
   # TODO: Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
   UpdateTodo:
@@ -119,18 +124,14 @@ functions:
       - http:
           method: patch
           path: todos/{todoId}
-          cors:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
+          cors: true
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
-          request:
-            schemas:
-              application/json: ${file(models/create-todo-model.json)}
+          documentation:
+            summary: Update a todo entry
+            description: Update an existing todo entry
+            requestModels:
+              'application/json': TodoUpdateRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -151,13 +152,7 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
-          cors:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
+          cors: true
           authorizer: Auth
     iamRoleStatementsInherit: true
     iamRoleStatements:
@@ -179,13 +174,7 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
-          cors:
-            - Content-Type
-            - X-Amz-Date
-            - Authorization
-            - X-Api-Key
-            - X-Amz-Security-Token
-            - X-Amz-User-Agent
+          cors: true
           authorizer: Auth
     iamRoleStatementsInherit: true
     iamRoleStatements:
