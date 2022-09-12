@@ -124,7 +124,7 @@ export class TodosAccess {
     }
   }
 
-  async deleteTodo(todoId : String){
+  async deleteTodo(todoId : String, userId : string){
 
     logger.info('delete todo with id', {
       key: todoId,
@@ -133,7 +133,8 @@ export class TodosAccess {
 
     const params = {
       Key: {
-        'KEY_NAME': {N: todoId}
+        'userId' : userId,
+        'todoId' : todoId
       },
       TableName: this.todosTable
     }

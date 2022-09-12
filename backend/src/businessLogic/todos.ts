@@ -11,7 +11,7 @@ import { TodoUpdate } from '../models/TodoUpdate'
 
 // TODO: Implement businessLogic
 const logger = createLogger('todos')
-
+const bucketName = process.env.ATTACHMENT_S3_BUCKET
 const todoAccess = new TodosAccess()
 
 export async function createTodo(createTodoRequest : CreateTodoRequest, event: any): Promise<TodoItem> {
@@ -24,8 +24,6 @@ export async function createTodo(createTodoRequest : CreateTodoRequest, event: a
       time : new Date().toISOString()
     })
 
-    const imageUrl = await AttachmentUtils(newTodoId)
-
     return await todoAccess.createTodo({
       userId: userId,
       todoId: newTodoId,
@@ -33,7 +31,7 @@ export async function createTodo(createTodoRequest : CreateTodoRequest, event: a
       dueDate: createTodoRequest.dueDate,
       createdAt: new Date().toISOString(),
       done: false,
-      attachmentUrl: imageUrl
+      attachmentUrl: `https://${bucketName}.s3.amazonaws.com/${newTodoId}`
     })
   }catch(e){
     createError(e);
@@ -62,14 +60,14 @@ export async function getTodosForUser(userId : string ): Promise <TodoItem []> {
   return await todoAccess.getAllTodos(userId)
 }
 
-export async function deleteTodo(todoId : string){
+export async function deleteTodo(todoId : string, userId : string){
   try {
     logger.info('delete todo with id', {
       key: todoId,
       time : new Date().toISOString()
     })
 
-    return await todoAccess.deleteTodo(todoId)
+    return await todoAccess.deleteTodo(todoId, userId)
   }catch (e) {
     createError(e)
   }
