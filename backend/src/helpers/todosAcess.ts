@@ -18,28 +18,28 @@ export class TodosAccess {
     private readonly todosTableIndex = process.env.TODOS_CREATED_AT_INDEX
   ) {}
 
-  async createTodo(todo : TodoItem) : Promise<TodoItem>{
+  async createTodo(item : TodoItem) : Promise<TodoItem>{
     logger.info('create todo request', {
-      key: todo.todoId,
-      data: todo,
+      key: item.todoId,
+      data: item,
       time : new Date().toISOString()
     })
     const params = {
       TableName: this.todosTable,
-      Item: todo
+      Item: item
     }
 
     try {
       const data = await this.docClient.put(params).promise();
       logger.info("CreateItem succeeded:", {
-        key: todo.todoId,
+        key: item.todoId,
         data : JSON.stringify(data, null, 2),
         time : new Date().toISOString()
       })
-      return todo;
+      return item;
     } catch (err) {
       logger.info("Unable to create item. Error JSON:", {
-        key: todo.todoId,
+        key: item.todoId,
         data : JSON.stringify(err, null, 2),
         time : new Date().toISOString()
       })

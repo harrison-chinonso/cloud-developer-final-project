@@ -11,7 +11,7 @@ export const handler = middy(
     const newTodo: CreateTodoRequest = JSON.parse(event.body)
     // TODO: Implement creating a new TODO item
 
-    const todo = await createTodo(newTodo, event)
+    const item = await createTodo(newTodo, event)
 
     return {
       statusCode: 201,
@@ -21,7 +21,7 @@ export const handler = middy(
         "Access-Control-Allow-Headers" : "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent"
       },
       body: JSON.stringify({
-        todo
+        item
       })
     }
   })

@@ -193,7 +193,6 @@ functions:
         Action:
           - s3:PutObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}
-        #!GetAtt TodoAttachmentsBucket.Arn
 
 resources:
   Resources:
