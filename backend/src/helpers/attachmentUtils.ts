@@ -23,7 +23,7 @@ export async function AttachmentUtils(imageId: string) {
     const data = await s3.getSignedUrl('putObject', param);
     logger.info("CreateItem succeeded:", {
       key: imageId,
-      data : JSON.stringify(data, null, 2),
+      data : data,
       time : new Date().toISOString()
     })
     return data;
